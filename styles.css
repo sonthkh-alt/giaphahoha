@@ -666,11 +666,15 @@ section {
   background: rgba(44, 24, 16, 0.7);
   backdrop-filter: blur(4px);
   z-index: 2000;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   padding: 1rem;
   animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.active {
+  display: flex;
 }
 
 .modal-content {

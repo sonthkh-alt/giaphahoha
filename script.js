@@ -397,6 +397,9 @@
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 
     const modal = document.getElementById('member-modal');
+    // Show modal with active class
+    requestAnimationFrame(() => modal.classList.add('active'));
+
     const closeBtn = modal.querySelector('.modal-close');
 
     // Event listeners
