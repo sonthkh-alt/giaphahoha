@@ -1,0 +1,17 @@
+# Test files
+test.html
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local development
+node_modules/
