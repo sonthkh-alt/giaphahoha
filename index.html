@@ -119,20 +119,32 @@
         <p>Nhấn vào từng người để xem thông tin chi tiết</p>
       </div>
       
+      <!-- Thanh công cụ tìm kiếm và điều khiển cây -->
       <div class="tree-controls reveal">
         <div class="search-container">
-          <input type="text" id="member-search" placeholder="Tìm kiếm thành viên..." />
+          <input type="text" id="member-search" placeholder="🔍 Tìm kiếm thành viên..." />
+          <div id="search-results" class="search-results"></div>
         </div>
         <div class="filter-buttons">
           <button class="filter-btn active" data-filter="all">Tất cả</button>
           <button class="filter-btn" data-filter="living">Còn sống</button>
           <button class="filter-btn" data-filter="deceased">Đã mất</button>
         </div>
+        <div class="zoom-controls">
+          <button class="zoom-btn" id="zoom-in" title="Phóng to">＋</button>
+          <button class="zoom-btn" id="zoom-out" title="Thu nhỏ">－</button>
+          <button class="zoom-btn" id="zoom-reset" title="Về mặc định">⟲</button>
+          <button class="zoom-btn" id="expand-all" title="Mở tất cả nhánh">▼</button>
+          <button class="zoom-btn" id="collapse-all" title="Thu gọn tất cả">▲</button>
+        </div>
       </div>
 
-      <div class="tree-wrapper">
-        <div id="family-tree-container" class="family-tree">
-          <!-- Rendered by JS -->
+      <!-- Khung chứa cây gia phả — hỗ trợ zoom/pan -->
+      <div class="tree-viewport" id="tree-viewport">
+        <div class="tree-canvas" id="tree-canvas">
+          <div id="family-tree-container" class="family-tree">
+            <!-- Rendered by JS -->
+          </div>
         </div>
       </div>
     </div>
@@ -349,6 +361,7 @@
         <ul class="footer-links">
           <li><a href="#lien-he">Liên hệ</a></li>
           <li><a href="#gioi-thieu">Giới thiệu</a></li>
+          <li><a href="admin.html">⚙️ Quản trị</a></li>
         </ul>
       </div>
     </div>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản trị Gia Phả Họ Hà</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+  
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <!-- ========== ĐĂNG NHẬP ========== -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-card">
+      <div class="login-icon">🏛️</div>
+      <h1>Quản Trị Gia Phả</h1>
+      <p>Dòng họ Hà — Yên Bái, Yên Định, Thanh Hóa</p>
+      <form id="login-form">
+        <input type="password" id="login-password" placeholder="Nhập mật khẩu..." autocomplete="off" autofocus>
+        <button type="submit">🔐 Đăng nhập</button>
+        <p class="login-error" id="login-error"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========== ADMIN PANEL ========== -->
+  <div id="admin-panel" class="admin-panel" style="display:none;">
+
+    <!-- Header -->
+    <header class="admin-header">
+      <div class="admin-header-inner">
+        <a href="index.html" class="admin-logo">🏛️ Họ Hà</a>
+        <h2>⚙️ Quản Trị Gia Phả</h2>
+        <div class="admin-actions">
+          <button id="btn-import" class="abtn" title="Import JSON">📥 Import</button>
+          <button id="btn-export" class="abtn abtn-primary" title="Export JSON">📤 Export JSON</button>
+          <button id="btn-logout" class="abtn abtn-danger" title="Đăng xuất">🚪</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Toolbar -->
+    <div class="admin-toolbar">
+      <input type="text" id="admin-search" placeholder="🔍 Tìm kiếm thành viên...">
+      <button id="btn-add" class="abtn abtn-success">➕ Thêm thành viên</button>
+      <div class="admin-stats" id="admin-stats"></div>
+    </div>
+
+    <!-- Bảng thành viên -->
+    <div class="admin-table-wrap">
+      <table class="admin-table" id="members-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên</th>
+            <th>Giới tính</th>
+            <th>Năm sinh</th>
+            <th>Năm mất</th>
+            <th>Cha</th>
+            <th>Mẹ</th>
+            <th>Vợ/Chồng</th>
+            <th>Quê quán</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody id="members-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Hướng dẫn -->
+    <div class="admin-guide">
+      <h4>📖 Hướng dẫn sử dụng</h4>
+      <ul>
+        <li><strong>Thêm/Sửa/Xóa</strong> thành viên trực tiếp trên giao diện.</li>
+        <li>Thay đổi được lưu tạm trong trình duyệt (localStorage).</li>
+        <li>Nhấn <strong>"Export JSON"</strong> để tải file <code>family.json</code> đã chỉnh sửa.</li>
+        <li>Upload file vào thư mục <code>data/</code> trên repo GitHub để cập nhật website.</li>
+        <li>Nhấn <strong>"Import JSON"</strong> để tải dữ liệu từ file JSON khác.</li>
+        <li>Để xóa dữ liệu tạm (quay về bản gốc), xóa localStorage trong DevTools.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========== MODAL THÊM/SỬA ========== -->
+  <div class="admin-modal-overlay" id="member-modal" style="display:none;">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h3 id="modal-title">Thêm thành viên</h3>
+        <button class="modal-close-btn" id="modal-close">&times;</button>
+      </div>
+      <form id="member-form" class="member-form">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="f-id">ID (duy nhất, viết thường, không dấu)</label>
+            <input type="text" id="f-id" name="id" required pattern="[a-z0-9_]+" placeholder="vd: nguyen_van_a">
+          </div>
+          <div class="form-field">
+            <label for="f-name">Họ và tên *</label>
+            <input type="text" id="f-name" name="name" required placeholder="Nguyễn Văn A">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="f-gender">Giới tính *</label>
+            <select id="f-gender" name="gender" required>
+              <option value="Male">Nam</option>
+              <option value="Female">Nữ</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="f-birthYear">Năm sinh</label>
+            <input type="text" id="f-birthYear" name="birthYear" placeholder="1990">
+          </div>
+          <div class="form-field">
+            <label for="f-deathYear">Năm mất</label>
+            <input type="text" id="f-deathYear" name="deathYear" placeholder="Để trống nếu còn sống">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="f-fatherId">Cha (chọn)</label>
+            <select id="f-fatherId" name="fatherId">
+              <option value="">— Không —</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="f-motherId">Mẹ (chọn)</label>
+            <select id="f-motherId" name="motherId">
+              <option value="">— Không —</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="f-spouseId">Vợ/Chồng (chọn)</label>
+            <select id="f-spouseId" name="spouseId">
+              <option value="">— Không —</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="f-hometown">Quê quán</label>
+            <input type="text" id="f-hometown" name="hometown" placeholder="Yên Bái, Yên Định, Thanh Hóa">
+          </div>
+          <div class="form-field">
+            <label for="f-photoUrl">URL ảnh</label>
+            <input type="text" id="f-photoUrl" name="photoUrl" placeholder="https://...">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="f-bio">Tiểu sử</label>
+          <textarea id="f-bio" name="bio" rows="3" placeholder="Ghi chú về thành viên..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>
+              <input type="checkbox" id="f-isDeceased" name="isDeceased">
+              Đã mất
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="form-cancel" class="abtn">Hủy</button>
+          <button type="submit" class="abtn abtn-primary" id="form-save">💾 Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Hidden file input for import -->
+  <input type="file" id="import-file" accept=".json" style="display:none">
+
+  <script src="admin.js"></script>
+</body>
+</html>
